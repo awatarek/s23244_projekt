@@ -1,5 +1,4 @@
 import java.io.*;
-import java.lang.invoke.SwitchPoint;
 import java.util.*;
 
 public class s23244 {
@@ -22,13 +21,36 @@ public class s23244 {
             if (args.length > 1) {
                 Airplane[] temp = multiplyAirCraft(args[1], samolot);
                 writeToFile(temp, "newAircraft.txt");
-                int[] points = new int[temp.length];
-                points = positions(temp);
+                int[] points = positions(temp);
                 for(int i = 0;i<points.length;i++){
                     System.out.println(points[i]);
                 }
+                System.out.println();
+                Arrays.sort(points);
+                int[] goodPoints = getPointsInReach(points);
+                for(int i = 0; i < goodPoints.length; i++){
+                    System.out.println(goodPoints[i]);
+                }
             }
         }
+    }
+
+    private static int[] getPointsInReach(int[] points) {
+        int step = 1;
+        for(int i = 0; i < points.length; i++){
+            if(points[i] < Math.pow(points[i],i)){
+                step++;
+            }
+        }
+        int[] temp = new int[step];
+        int newStep = 0;
+        for(int i = 0; i < points.length; i++){
+            if(points[i] < Math.pow(points[i],(i+1))){
+                temp[newStep] = points[i];
+                newStep++;
+            }
+        }
+        return temp;
     }
 
     private static int[] positions(Airplane[] temp) {
@@ -53,7 +75,6 @@ public class s23244 {
             temp1 = Math.abs(temp1);
             temp1 += pitch;
             distance[i] = temp1;
-            return distance;
         }
         return distance;
     }
