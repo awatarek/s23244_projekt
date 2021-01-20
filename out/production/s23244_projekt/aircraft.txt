@@ -1,0 +1,10 @@
+fighter,250,980,-136,FA6141,15728,1503,16076,veryLarge,15,true
+fighter,772,521,-153,FA3527,7610,3482,15222,veryLarge,11,false
+passenger,889,-509,74,FA6358,7656,663,269611,veryLarge,146,145
+passenger,259,-978,141,FA4081,9538,748,372078,veryLarge,109,105
+transporter,-474,442,-65,FA8968,8936,559,345704,veryLarge,
+transporter,-729,-207,78,FA2653,10020,753,299572,veryLarge,
+aeroplane,-173,-424,-134,FA8413,94,63,792,small,
+aeroplane,-259,-821,-29,FA9506,728,127,416,verySmall,
+paraglider,-940,247,-31,FA9813,91,25,102,verySmall,
+paraglider,-642,747,38,FA2279,177,56,75,verySmall,
