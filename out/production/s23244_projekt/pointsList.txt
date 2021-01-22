@@ -1,0 +1,67 @@
+potęga: 1 mniejsze niż: 3.0 ma:0 samolotow 
+potęga: 2 mniejsze niż: 9.0 ma:0 samolotow 
+potęga: 3 mniejsze niż: 27.0 ma:0 samolotow 
+potęga: 4 mniejsze niż: 81.0 ma:0 samolotow 
+potęga: 5 mniejsze niż: 243.0 ma:0 samolotow 
+potęga: 6 mniejsze niż: 729.0 ma:4 samolotow 
+potęga: 7 mniejsze niż: 2187.0 ma:22 samolotow 
+potęga: 8 mniejsze niż: 6561.0 ma:6 samolotow 
+potęga: 9 mniejsze niż: 19683.0 ma:18 samolotow 
+potęga: 10 mniejsze niż: 59049.0 ma:0 samolotow 
+
+--------------------------------
+
+potęga: 6 mniejsze niż: 729.0
+524 
+476 
+563 
+491 
+potęga: 7 mniejsze niż: 2187.0
+1718 
+1677 
+2118 
+2181 
+1041 
+1170 
+1498 
+1436 
+1532 
+1039 
+1216 
+1132 
+1611 
+817 
+1322 
+893 
+1176 
+1046 
+1240 
+1607 
+1349 
+1710 
+potęga: 8 mniejsze niż: 6561.0
+6072 
+4437 
+4616 
+4747 
+4764 
+2707 
+potęga: 9 mniejsze niż: 19683.0
+10322 
+8162 
+11137 
+11667 
+8474 
+9478 
+9507 
+9851 
+9170 
+9157 
+9966 
+7217 
+9966 
+6853 
+9839 
+9117 
+9152 
+7013 

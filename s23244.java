@@ -5,81 +5,82 @@ public class s23244 {
     public static void main(String[] args) {
         if (args[0].equals("save")) {
             Airplane[] myAirplane = new Airplane[10];
-            myAirplane = create(aircraftType.fighter, myAirplane, 0);
-            myAirplane = create(aircraftType.fighter, myAirplane, 1);
-            myAirplane = create(aircraftType.passenger, myAirplane, 2);
-            myAirplane = create(aircraftType.passenger, myAirplane, 3);
-            myAirplane = create(aircraftType.transporter, myAirplane, 4);
-            myAirplane = create(aircraftType.transporter, myAirplane, 5);
-            myAirplane = create(aircraftType.aeroplane, myAirplane, 6);
-            myAirplane = create(aircraftType.aeroplane, myAirplane, 7);
-            myAirplane = create(aircraftType.paraglider, myAirplane, 8);
-            myAirplane = create(aircraftType.paraglider, myAirplane, 9);
+            myAirplane = createNewAirplane(aircraftType.fighter, myAirplane, 0);
+            myAirplane = createNewAirplane(aircraftType.fighter, myAirplane, 1);
+            myAirplane = createNewAirplane(aircraftType.passenger, myAirplane, 2);
+            myAirplane = createNewAirplane(aircraftType.passenger, myAirplane, 3);
+            myAirplane = createNewAirplane(aircraftType.transporter, myAirplane, 4);
+            myAirplane = createNewAirplane(aircraftType.transporter, myAirplane, 5);
+            myAirplane = createNewAirplane(aircraftType.aeroplane, myAirplane, 6);
+            myAirplane = createNewAirplane(aircraftType.aeroplane, myAirplane, 7);
+            myAirplane = createNewAirplane(aircraftType.paraglider, myAirplane, 8);
+            myAirplane = createNewAirplane(aircraftType.paraglider, myAirplane, 9);
             writeToFile(myAirplane, "aircraft.txt");
         } else if (args[0].equals("load")) {
             String[] samolot = readFromFile();
             if (args.length > 1) {
                 Airplane[] temp = multiplyAirCraft(args[1], samolot);
                 writeToFile(temp, "newAircraft.txt");
-                int[] points = positions(temp);
-                for(int i = 0;i<points.length;i++){
-                    System.out.println(points[i]);
+                int[][] goodPoints = new int[11][1];
+                for (int i = 0; i < temp.length; i++) {
+                    int position = positions(temp[i]);
+                    int location = getPointsInReach(position);
+                    int lengthOfArray = goodPoints[location].length;
+                    int[] temp1 = goodPoints[location];
+                    goodPoints[location] = new int[(lengthOfArray + 1)];
+                    for (int y = 0; y < temp1.length; y++) {
+                        goodPoints[location][y] = temp1[y];
+                    }
+                    goodPoints[location][(lengthOfArray - 1)] = position;
                 }
-                System.out.println();
-                Arrays.sort(points);
-                int[] goodPoints = getPointsInReach(points);
-                for(int i = 0; i < goodPoints.length; i++){
-                    System.out.println(goodPoints[i]);
-                }
+                String data = GetGoodPointsFile(goodPoints);
+                writeToFile(data, "pointsList.txt");
             }
         }
     }
 
-    private static int[] getPointsInReach(int[] points) {
-        int step = 1;
-        for(int i = 0; i < points.length; i++){
-            if(points[i] < Math.pow(points[i],i)){
-                step++;
-            }
+    private static String GetGoodPointsFile(int[][] points) {
+        String data = "";
+        for (int i = 1; i < points.length; i++) {
+            data += "potęga: " + i + " mniejsze niż: " + Math.pow(3, i) + " ma:" + (points[i].length - 1) + " samolotow" + " \n";
         }
-        int[] temp = new int[step];
-        int newStep = 0;
-        for(int i = 0; i < points.length; i++){
-            if(points[i] < Math.pow(points[i],(i+1))){
-                temp[newStep] = points[i];
-                newStep++;
-            }
-        }
-        return temp;
-    }
-
-    private static int[] positions(Airplane[] temp) {
-        int length = temp.length;
-        int[] distance = new int[length];
-        for (int i = 0; i < length; i++) {
-            int temp1 = 0;
-            int positionx;
-            int positiony;
-            positionx = temp[i].positionx;
-            positiony = temp[i].positiony;
-            int pitch = temp[i].pitch;
-            if ((positionx < 0 &&positiony < 0) || (positionx > 0 && positiony > 0)) {
-                if (positionx < positiony) {
-                    temp1 = Math.abs((positionx)) - Math.abs((positiony));
-                } else {
-                    temp1 = Math.abs((positiony)) - Math.abs((positionx));
+        data += "\n--------------------------------\n\n";
+        for (int i = 1; i < points.length; i++) {
+            if (points[i].length != 1) {
+                data += "potęga: " + i + " mniejsze niż: " + Math.pow(3, i) + "\n";
+                for (int k = 0; k < (points[i].length - 1); k++) {
+                    data += points[i][k] + " \n";
                 }
-            } else {
-                temp1 = Math.abs((positionx)) + Math.abs((positiony));
             }
-            temp1 = Math.abs(temp1);
-            temp1 += pitch;
-            distance[i] = temp1;
         }
-        return distance;
+        return data;
     }
 
-    private static Airplane[] multiplyAirCraft(String arg,String[] airplane) {
+    private static int getPointsInReach(int position) {
+        int location = 0;
+        for (int i = 1; i < 11; i++) {
+            if (position < Math.pow(3, i)) {
+                location = i;
+                return location;
+            }
+        }
+
+        return location;
+
+    }
+
+    private static int positions(Airplane temp) {
+        int temp1 = 0;
+        int positionx;
+        int positiony;
+        positionx = temp.positionx;
+        positiony = temp.positiony;
+        int pitch = temp.pitch;
+        temp1 = (int) Math.abs(Math.sqrt(Math.pow(positionx, 2) + Math.pow(positiony, 2) + Math.pow(pitch, 2)));
+        return temp1;
+    }
+
+    private static Airplane[] multiplyAirCraft(String arg, String[] airplane) {
         int multiplayer = Integer.parseInt(arg);
         int placeInArray = 0;
         Airplane[] tempList = new Airplane[10 * multiplayer];
@@ -101,7 +102,7 @@ public class s23244 {
         String[] temp2 = airplane.split(",");
         Airplane temp3 = new Airplane();
         temp3.convert(temp2);
-        temp = getSpecifiedAircraft(temp3,temp2,arr,index);
+        temp = getSpecifiedAircraft(temp3, temp2, arr, index);
         return temp;
     }
 
@@ -115,7 +116,7 @@ public class s23244 {
             }
             case transporter -> {
                 Transporter transporter = new Transporter();
-                transporter.convert(temp);
+                transporter.convert(temp, temp2);
                 arr[i] = transporter;
                 return arr;
             }
@@ -127,7 +128,7 @@ public class s23244 {
             }
             case paraglider -> {
                 paraglider paraglider = new paraglider();
-                paraglider.convert(temp);
+                paraglider.convert(temp, temp2);
                 arr[i] = paraglider;
                 return arr;
             }
@@ -155,11 +156,23 @@ public class s23244 {
         }
     }
 
+    private static void writeToFile(String data, String fileName) {
+        try {
+            FileWriter myWriter = new FileWriter(fileName);
+            myWriter.write(data);
+            myWriter.close();
+            System.out.println("Udalo sie zapisac do pliku!");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     private static String[] readFromFile() {
         int i = 0;
         String[] line = new String[10];
         try {
-            Scanner scanner = new Scanner(new File("out.txt"));
+            Scanner scanner = new Scanner(new File("aircraft.txt"));
             while (scanner.hasNextLine()) {
                 line[i] = scanner.nextLine();
                 i++;
@@ -170,31 +183,34 @@ public class s23244 {
         return line;
     }
 
-    public static Airplane[] create(aircraftType type, Airplane[] myAirplane, int i) {
+    public static Airplane[] createNewAirplane(aircraftType type, Airplane[] myAirplane, int i) {
         switch (type) {
             case passenger -> {
                 Passenger passenger = new Passenger();
                 passenger.soulsLimit = getRand(50, 150);
                 passenger.soulsOnBoard = getRand(50, passenger.soulsLimit);
-                getDetails(passenger, type);
+                getBasicDetails(passenger, type);
                 myAirplane[i] = passenger;
                 return myAirplane;
             }
             case transporter -> {
                 Transporter transporter = new Transporter();
-                getDetails(transporter, type);
+                transporter.maximumLoad = getRand(1000, 10000);
+                transporter.currentLoad = getRand(1000, transporter.maximumLoad);
+                getBasicDetails(transporter, type);
                 myAirplane[i] = transporter;
                 return myAirplane;
             }
             case aeroplane -> {
                 Aeroplane aeroplane = new Aeroplane();
-                getDetails(aeroplane, type);
+                getBasicDetails(aeroplane, type);
                 myAirplane[i] = aeroplane;
                 return myAirplane;
             }
             case paraglider -> {
                 paraglider paraglider = new paraglider();
-                getDetails(paraglider, type);
+                getBasicDetails(paraglider, type);
+                paraglider.canopySpan = getRand(5, 20);
                 myAirplane[i] = paraglider;
                 return myAirplane;
             }
@@ -202,7 +218,7 @@ public class s23244 {
                 Fighter fighter = new Fighter();
                 fighter.missiles = getRand(4, 16);
                 fighter.hasFlares = getRand(0, 1000) > 500;
-                getDetails(fighter, type);
+                getBasicDetails(fighter, type);
                 myAirplane[i] = fighter;
                 return myAirplane;
             }
@@ -210,7 +226,7 @@ public class s23244 {
         return myAirplane;
     }
 
-    public static Airplane getDetails(Airplane airplane, aircraftType type) {
+    public static Airplane getBasicDetails(Airplane airplane, aircraftType type) {
         airplane.positionx = getRand(-1000, 1000);
         airplane.positiony = getRand(-1000, 1000);
         airplane.vector = getRand(-180, 180);
@@ -230,21 +246,21 @@ public class s23244 {
 
     private static int getPitch(aircraftType type) {
         return switch (type) {
-            case passenger, transporter -> getRand(5000, 11000);
-            case aeroplane -> getRand(50, 1000);
-            case paraglider -> getRand(50, 200);
-            case fighter -> getRand(7000, 20000);
+            case passenger, transporter -> getRand(0, 10000);
+            case aeroplane -> getRand(0, 1000);
+            case paraglider -> getRand(0, 100);
+            case fighter -> getRand(0, 12000);
         };
     }
 
     private static sizeClass getSizeClass(int weight) {
-        if (weight < 500) {
+        if (weight < 800) {
             return sizeClass.verySmall;
-        } else if (weight < 1000) {
-            return sizeClass.small;
-        } else if (weight < 1500) {
-            return sizeClass.medium;
         } else if (weight < 2000) {
+            return sizeClass.small;
+        } else if (weight < 7000) {
+            return sizeClass.medium;
+        } else if (weight < 15000) {
             return sizeClass.large;
         } else {
             return sizeClass.veryLarge;
@@ -285,7 +301,7 @@ class Airplane {
     sizeClass sizeClass;
     aircraftType type;
 
-    public Airplane(){
+    public Airplane() {
 
     }
 
@@ -328,31 +344,14 @@ class Airplane {
         return this;
     }
 
-    public void randomisePosition() {
-        this.positionx = getRand(-1000, 1000);
-        this.positiony = getRand(-1000, 1000);
-        this.pitch = getPitch(this.type);
-    }
-
-    private static int getPitch(aircraftType type) {
-        return switch (type) {
-            case passenger, transporter -> getRand(5000, 11000);
-            case aeroplane -> getRand(50, 1000);
-            case paraglider -> getRand(50, 200);
-            case fighter -> getRand(7000, 20000);
-        };
-    }
-
-    private static int getRand(int min, int max) {
-        return (int) (min + Math.random() * (max - min));
-    }
 }
 
 class Fighter extends Airplane {
     int missiles;
     boolean hasFlares;
 
-    public Fighter(){}
+    public Fighter() {
+    }
 
     public Fighter(Airplane airplane, int missiles, boolean hasFlares) {
         super(airplane);
@@ -388,7 +387,8 @@ class Passenger extends Airplane {
     int soulsLimit;
     int soulsOnBoard;
 
-    public Passenger(){}
+    public Passenger() {
+    }
 
     public Passenger(Airplane airplane, int soulsLimit, int soulsOnBoard) {
         super(airplane);
@@ -421,18 +421,27 @@ class Passenger extends Airplane {
 }
 
 class Transporter extends Airplane {
+    int maximumLoad;
+    int currentLoad;
+
     public String crateData() {
         String data = super.crateData();
+        data += this.maximumLoad + ",";
+        data += this.currentLoad;
         data += "\n";
         return data;
     }
-    public Transporter(){}
 
-    public Transporter(Airplane airplane) {
-        super(airplane);
+    public Transporter() {
     }
 
-    public Airplane convert(Airplane airplane) {
+    public Transporter(Airplane airplane, int currentLoad, int maximumLoad) {
+        super(airplane);
+        this.currentLoad = currentLoad;
+        this.maximumLoad = maximumLoad;
+    }
+
+    public Airplane convert(Airplane airplane, String[] temp) {
         this.type = airplane.type;
         this.positionx = airplane.positionx;
         this.positiony = airplane.positiony;
@@ -442,18 +451,22 @@ class Transporter extends Airplane {
         this.speed = airplane.speed;
         this.weight = airplane.weight;
         this.sizeClass = airplane.sizeClass;
+        this.maximumLoad = Integer.parseInt(temp[9]);
+        this.currentLoad = Integer.parseInt(temp[10]);
         return this;
     }
 }
 
 class Aeroplane extends Airplane {
+
     public String crateData() {
         String data = super.crateData();
         data += "\n";
         return data;
     }
 
-    public Aeroplane(){}
+    public Aeroplane() {
+    }
 
     public Aeroplane(Airplane airplane) {
         super(airplane);
@@ -474,19 +487,23 @@ class Aeroplane extends Airplane {
 }
 
 class paraglider extends Airplane {
+    int canopySpan;
+
     public String crateData() {
         String data = super.crateData();
+        data += this.canopySpan;
         data += "\n";
         return data;
     }
 
-    public paraglider(){}
+    public paraglider() {
+    }
 
     public paraglider(Airplane airplane) {
         super(airplane);
     }
 
-    public Airplane convert(Airplane airplane) {
+    public Airplane convert(Airplane airplane, String[] temp) {
         this.type = airplane.type;
         this.positionx = airplane.positionx;
         this.positiony = airplane.positiony;
@@ -496,6 +513,7 @@ class paraglider extends Airplane {
         this.speed = airplane.speed;
         this.weight = airplane.weight;
         this.sizeClass = airplane.sizeClass;
+        this.canopySpan = Integer.parseInt(temp[9]);
         return this;
     }
 }
